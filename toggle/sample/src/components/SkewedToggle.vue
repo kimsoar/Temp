@@ -1,13 +1,22 @@
 <template>
     <div class="tg-item">
-        <input class="tgl tgl-skewed" id="toggle" type="checkbox" v-model="value"/>
-        <label class="tgl-btn" :data-off-text="offText" :data-on-text="onText" for="toggle"></label>
+        <input class="tgl tgl-skewed" id="toggle" type="checkbox" :checked="value" @input="updateValue" />
+        <label class="tgl-btn" :data-off-text="offText" :data-on-text="onText" :style="{
+          '--off-background-color': offBackgroundColor,
+          '--on-background-color': onBackgroundColor,
+          '--font-color': fontColor
+        }" 
+        for="toggle"></label>
     </div>
 </template>
 
 <script>
     export default {
         props: {
+            value: {
+              type: Boolean,
+              default: false
+            },
             offText: {
                 type: String,
                 default: 'Off'
@@ -15,19 +24,34 @@
             onText: {
                 type: String,
                 default: 'On'
-            }
+            },
+            // offBackgroundColor: {
+            //   type: String,
+            //   default: '#888'
+            // },
+            // onBackgroundColor: {
+            //   type: String,
+            //   default: '#86d993'
+            // }
         },
         data() {
           return {
-            value: false
+            valueModel: this.value,
+            offBackgroundColor: '#888',
+            onBackgroundColor: '#86d993',
+            fontColor: '#FFF'
           }
+        },
+        methods: {
+          updateValue(event) {
+            this.$emit('input', event.target.checked)
+         }
         }
     }
 </script>
 
 <style lang="scss" scoped>
 .tg-item {
-
   margin: 0 2em;
 }
 
@@ -85,7 +109,8 @@
     backface-visibility: hidden;
     transition: all .2s ease;
     font-family: sans-serif;
-    background: #888;
+    /* background: #888; */
+    background: var(--off-background-color);
     &:after,
     &:before {
       display: inline-block;
@@ -95,7 +120,8 @@
       position: absolute;
       line-height: 2em;
       font-weight: bold;
-      color: #fff;
+      /* color: #fff; */
+      color: var(--font-color);
       text-shadow: 0 1px 0 rgba(0,0,0,.4);
     }
     
@@ -110,7 +136,8 @@
     }
     
     &:active {
-      background: #888;
+      /* background: #888; */
+      background: var(--off-background-color);
       &:before {
         left: -10%;
       }
@@ -118,7 +145,8 @@
   }
   
   &:checked + .tgl-btn {
-    background: #86d993;
+    /* background: #86d993; */
+    background: var(--on-background-color);
     &:before {
       left: -100%;
     }
